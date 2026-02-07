@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Unzip project
-        run: unzip SmsHelloApp.zip
-
-      - name: Move project files
-        run: mv SmsHelloApp/* .
+        run: |
+          ls -la
+          unzip -o SmsHelloApp.zip
+          ls -la
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -25,14 +25,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Give permission
-        run: chmod +x gradlew
-
-      - name: Build APK
-        run: ./gradlew assembleDebug
+      - name: Build Debug APK
+        run: |
+          cd SmsHelloApp
+          chmod +x gradlew
+          ./gradlew --no-daemon assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: SmsHelloApp/app/build/outputs/apk/debug/app-debug.apk
